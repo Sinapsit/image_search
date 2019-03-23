@@ -10,7 +10,7 @@ class VectorAbstract(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def get_images_by_queryset(self, queryset=None):
+    def get_similar(self, queryset=None):
         pass
 
 
@@ -20,5 +20,5 @@ class SearchByVector(VectorAbstract):
     def get_vector(self):
         return 'test'
 
-    def get_images_by_queryset(self, queryset=None):
+    def get_similar(self, queryset=None):
         return queryset

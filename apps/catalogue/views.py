@@ -24,7 +24,7 @@ class ImageSearchView(generics.GenericAPIView):
         image = serializer.data['image']
         qs = SearchByVector(
             image=image
-        ).get_images_by_queryset(
+        ).get_similar(
             queryset=models.ProductImage.objects.all()
         )
         images = serializers.ImageSerializer(qs, many=True).data
