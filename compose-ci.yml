@@ -1,0 +1,25 @@
+version: '2'
+services:
+  db:
+    image: postgres:9.5
+    hostname: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+  stor:
+    build: .
+    command: python project/manage.py runserver 0.0.0.0:8000
+    environment:
+      - SETTINGS_CONFIGURATION=ci
+      - DB_NAME=postgres
+      - DB_USERNAME=postgres
+      - DB_HOSTNAME=db
+      - DB_PORT=5432
+      - DB_PASSWORD=postgres
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"

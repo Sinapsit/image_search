@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE stuff:
+.idea/
+
+# Django stuff:
+media/
+logs/
+
+/project/project/settings/local.py
+
+# celery beat schedule file
+celerybeat-schedule*
+/datadir/
+/logs/
+/project/media/
+/project/project/settings/local_wd.py
+/project/project/db.sqlite3
+
+#env
+.env/
