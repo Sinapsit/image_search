@@ -24,4 +24,5 @@ api_schema_view = get_swagger_view(title='Store API')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', api_schema_view),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('catalogue/', include('catalogue.urls'))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

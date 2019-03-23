@@ -9,6 +9,7 @@ __pycache__/
 # Django stuff:
 media/
 logs/
+datadir/
 
 /project/project/settings/local.py
 

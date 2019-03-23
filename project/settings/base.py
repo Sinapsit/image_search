@@ -50,11 +50,15 @@ CONTRIB_APPS = [
 ]
 
 PROJECT_APPS = [
-
+    'catalogue.apps.CatalogueConfig',
 ]
 
 EXTERNAL_APPS = [
-
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_swagger',
+    'django_filters',
+    'easy_thumbnails',
 ]
 
 
@@ -139,4 +143,35 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(PUBLIC_ROOT, 'static')
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(PUBLIC_ROOT, 'media')
+MEDIA_URL = '/media/'
+
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+
+FILE_UPLOAD_PERMISSIONS = 0o644
+
+REST_DATE_FORMAT = '%m-%d-%Y'
+REST_DATETIME_FORMAT = '%m-%d-%Y %H:%M:%S'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'utils.pagination.ProjectPageNumberPagination',
+    'PAGE_SIZE': 15,
+
+    'COERCE_DECIMAL_TO_STRING': False,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+}
