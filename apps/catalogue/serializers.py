@@ -10,3 +10,15 @@ class ImageSerializer(serializers.ModelSerializer):
             "article",
             "image"
         ]
+
+
+class ImageSearchSerializer(serializers.Serializer):
+    """Image Search serializer."""
+    image = serializers.ImageField()
+
+    class Meta:
+        fields = [
+            'image'
+        ]
+
+
