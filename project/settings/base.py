@@ -175,3 +175,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
 }
+
+# Machine learning
+VECTORS_PATH = os.path.join(DATADIR_ROOT, 'vectors')

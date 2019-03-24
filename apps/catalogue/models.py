@@ -22,6 +22,9 @@ class ProductImageQuerySet(models.QuerySet):
     def get_without_vector(self):
         return self.filter(vector_isnull=True)
 
+    def available(self):
+        return self.filter(status=ProductImage.LOADED)
+
 
 class ProductImage(ProjectBaseMixin):
     """Product image model."""
