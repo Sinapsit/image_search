@@ -8,6 +8,7 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "article",
+            "external_url",
             "image"
         ]
 
