@@ -18,3 +18,7 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT'),
     }
 }
+
+# Machine learning
+VECTORS_PATH = 'datadir/vectors/image_vectors.npz'
+WEIGHTS = 'datadir/vgg19_weights_tf_dim_ordering_tf_kernels.h5'

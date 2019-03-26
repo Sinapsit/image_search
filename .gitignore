@@ -22,4 +22,5 @@ celerybeat-schedule*
 /project/project/db.sqlite3
 
 #env
+.env
 .env/
