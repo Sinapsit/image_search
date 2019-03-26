@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from catalogue import models
+import os
+from django.conf import settings
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -21,5 +23,9 @@ class ImageSearchSerializer(serializers.Serializer):
         fields = [
             'image'
         ]
+
+    # def save(self, ):
+    #     save_path = os.path.join(settings.MEDIA_ROOT, 'uploads', "image")
+    #     return default_storage.save(save_path, image)
 
 

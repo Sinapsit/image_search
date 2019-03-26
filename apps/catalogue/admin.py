@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 @admin.register(models.ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ['id', 'article', 'created', 'image_tag', 'status']
+    list_display = ['id', 'article', 'created', 'image_tag', 'status', 'is_vectorized', ]
     search_fields = ['articles']
     readonly_fields = ('id', 'created', 'modified', 'image_tag', 'status')
     list_filter = ('status',)
@@ -28,9 +28,9 @@ class ProductImageAdmin(admin.ModelAdmin):
             )
         }
          ),
-        (_('AI_Data'), {
+        (_('Machine learning'), {
             'fields': (
-                'vector',
+                'is_vectorized',
             )
         }
          ),

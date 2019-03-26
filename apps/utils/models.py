@@ -34,6 +34,14 @@ def image_path(instance, filename):
         filename)
 
 
+def vector_path(instance, filename):
+    """Determine vector file path method."""
+    filename = '%s.npz' % generate_code()
+    return 'vector/%s/%s/%s' % (
+        instance._meta.model_name,
+        datetime.now().strftime(settings.REST_DATE_FORMAT),
+        filename)
+
 class ImageMixin(models.Model):
     """Avatar model."""
 

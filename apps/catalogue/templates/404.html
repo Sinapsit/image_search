@@ -1,0 +1,12 @@
+{% extends 'catalogue/base.html' %}
+{% load i18n %}
+
+{% load staticfiles %}
+
+
+{% block content %}
+
+        <h1 class="panel-title">{% trans 'Your page does not exist!' %}</h1>
+        <img src="{% static 'images/default.png' %}" >
+
+{% endblock %}

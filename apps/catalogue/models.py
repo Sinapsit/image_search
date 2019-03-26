@@ -40,15 +40,15 @@ class ProductImage(ProjectBaseMixin):
 
     article = models.CharField(verbose_name=_('Article'), max_length=512, unique=True)
     image = models.ImageField(verbose_name=_('Image'), upload_to=image_path)
-    vector = models.TextField(verbose_name=_('Vector'), blank=True, null=True, default=None)
     external_url = models.URLField(_('External URL'), null=True, default=None)
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=NOT_LOADED)
-
+    is_vectorized = models.BooleanField(_('Is vectorized'), default=False)
     objects = ProductImageManager.from_queryset(ProductImageQuerySet)()
 
     class Meta:
         verbose_name_plural = _('Product images')
         verbose_name = _('Product image')
+        ordering = ('article',)
 
     def __str__(self):
         return self.article

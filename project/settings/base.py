@@ -51,6 +51,7 @@ CONTRIB_APPS = [
 
 PROJECT_APPS = [
     'catalogue.apps.CatalogueConfig',
+    'configuration.apps.ConfigurationConfig',
 ]
 
 EXTERNAL_APPS = [
@@ -59,6 +60,7 @@ EXTERNAL_APPS = [
     'rest_framework_swagger',
     'django_filters',
     'easy_thumbnails',
+    'solo',
 ]
 
 
@@ -177,4 +179,5 @@ REST_FRAMEWORK = {
 }
 
 # Machine learning
-VECTORS_PATH = os.path.join(DATADIR_ROOT, 'vectors')
+VECTORS_PATH = 'datadir/vectors/image_vectors.npz'
+WEIGHTS = 'datadir/vgg19_weights_tf_dim_ordering_tf_kernels.h5'

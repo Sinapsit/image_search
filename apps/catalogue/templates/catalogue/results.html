@@ -1,0 +1,13 @@
+{% extends "catalogue/../catalogue/base.html" %}
+
+{% block title %}Search results{% endblock %}
+
+{% block page_header %}Search results{% endblock %}
+
+{% block content %}
+    {% for result in results %}
+        <article class="media content-section">
+{#          <img class="img-thumbnail rounded float-left" src="{{ result.image.url }}">#}
+        </article>
+    {% endfor %}
+{% endblock content %}
