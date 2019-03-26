@@ -61,6 +61,7 @@ from learning.common import BaseLearning
 class Predict(BaseLearning):
 
     def __init__(self, path=None, file=None, list_content='filename'):
+        super().__init__()
         self.path = path
         self.file = file
         self.config = LearningConfig.get_solo()

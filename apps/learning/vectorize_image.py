@@ -13,6 +13,7 @@ from learning.common import BaseLearning
 class Vectorization(BaseLearning):
     """Vectorization all image file"""
     def __init__(self, queryset=None):
+        super().__init__()
         self.queryset = queryset
         self.files = []
         self.articles = []

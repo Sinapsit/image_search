@@ -13,5 +13,6 @@ def get_weights():
 
 class BaseLearning:
 
-    base_model = VGG19(weights=get_weights())
-    graph = tf.get_default_graph()
+    def __init__(self):
+        self.base_model = VGG19(weights=get_weights())
+        self.graph = tf.get_default_graph()
