@@ -45,9 +45,9 @@ class ImageSearchView(generics.GenericAPIView):
         """Delete method."""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        image = serializer.data['image']
+        image = request.data['image']
         # save tamp file
-        save_path = os.path.join(settings.MEDIA_ROOT, 'uploads', image)
+        save_path = os.path.join(settings.MEDIA_ROOT, 'uploads', image.name)
         path = default_storage.save(save_path, image)
         # path = 'media/media/image/productimage/03-24-2019/000205.jpeg'
         pred = Predict(path=path, list_content='article').similarity()
