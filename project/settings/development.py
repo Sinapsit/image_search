@@ -20,5 +20,5 @@ DATABASES = {
 }
 
 # Machine learning
-VECTORS_PATH = 'datadir/vectors/image_vectors.npz'
-WEIGHTS = 'datadir/vgg19_weights_tf_dim_ordering_tf_kernels.h5'
+VECTORS_PATH = '/home/HOSTING/stolplit_nn/project/datadir/vectors/image_vectors.npz'
+WEIGHTS = '/home/HOSTING/stolplit_nn/project/datadir/vgg19_weights_tf_dim_ordering_tf_kernels.h5'
