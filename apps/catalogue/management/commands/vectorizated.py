@@ -9,8 +9,10 @@ class Command(BaseCommand):
     help = 'Vectorization all images.'
 
     def handle(self, *args, **options):
-        qs_slice = ProductImage.objects.available()[:1000]
-        qs = ProductImage.objects.filter(id__in=qs_slice)
+        qs = ProductImage.objects.available()
+        # if options['max']:
+        qs = ProductImage.objects.filter(id__in=qs[:10000])
+
         v = Vectorization(qs)
         v.execute()
 

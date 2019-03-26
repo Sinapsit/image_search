@@ -42,6 +42,7 @@ def vector_path(instance, filename):
         datetime.now().strftime(settings.REST_DATE_FORMAT),
         filename)
 
+
 class ImageMixin(models.Model):
     """Avatar model."""
 

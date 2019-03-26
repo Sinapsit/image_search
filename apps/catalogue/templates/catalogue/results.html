@@ -1,13 +1,23 @@
 {% extends "catalogue/../catalogue/base.html" %}
-
+{% load static %}
 {% block title %}Search results{% endblock %}
 
 {% block page_header %}Search results{% endblock %}
 
 {% block content %}
-    {% for result in results %}
+    <strong>Search image</strong>
+    <article class="media content-section">
+        <img class="img-thumbnail rounded float-left" src="/media/uploads/{{ search_img }}" width="150" height="150">
+        {{ img.article }}
+    </article>
+    <hr>
+    <strong>Result:</strong>
+    {% for img in images %}
+
         <article class="media content-section">
-{#          <img class="img-thumbnail rounded float-left" src="{{ result.image.url }}">#}
+            <img class="img-thumbnail rounded float-left" src="{{ img.image }}" width="150" height="150">
+            <small> Article:{{ img.article }}</small>
         </article>
+
     {% endfor %}
 {% endblock content %}

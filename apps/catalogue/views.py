@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from .models import ProductImage
 from django.conf import settings
 from django.core.files.storage import default_storage
+from django.shortcuts import render
 import os
 
 
@@ -16,10 +17,19 @@ class PhotoUploadView(CreateView):
     fields = ['image']
     template_name = 'catalogue/base.html'  # <app>/<model>_<viewtype>.html
     success_url = '/catalogue/results/'  # /results/ if in url path('results/',...name='something')
+    queryset = models.ProductImage.objects.all()
 
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
-        return HttpResponseRedirect(self.success_url)
+        image = form.files['image']
+        save_path = os.path.join(settings.MEDIA_ROOT, 'uploads', image._name)
+        path = default_storage.save(save_path, image)
+        pred = Predict(path=path, list_content='article').similarity()
+        list_data = [i[0] for i in pred]
+        qs = self.queryset.filter(article__in=list_data)
+        images = serializers.ImageSerializer(qs, many=True).data
+        return render(self.request, 'catalogue/results.html', {'images': images,
+                                                               'search_img': path.split('/')[-1]})
 
 
 class SearchResultsView(ListView):
