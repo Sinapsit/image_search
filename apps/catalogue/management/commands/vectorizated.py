@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         qs = ProductImage.objects.available()
         # if options['max']:
-        qs = ProductImage.objects.filter(id__in=qs[:10000])
+        # qs = ProductImage.objects.filter(id__in=qs[:10000])
 
         v = Vectorization(qs)
         v.execute()
