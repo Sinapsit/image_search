@@ -8,7 +8,8 @@ from keras.preprocessing import image
 from catalogue.models import ProductImage
 from configuration.models import LearningConfig
 from learning.common import BaseLearning
-
+import tensorflow as tf
+from keras.applications import VGG19
 
 class Vectorization(BaseLearning):
     """Vectorization all image file"""
@@ -69,9 +70,9 @@ class Vectorization(BaseLearning):
 
     def execute(self):
         self.get_files()
-
+        base_model = VGG19(weights=self.get_weights())
         # Read about fc1 here http://cs231n.github.io/convolutional-networks/
-        model = Model(inputs=self.base_model.input, outputs=self.base_model.get_layer('fc1').output)
+        model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc1').output)
 
         # Получаем матрицу с векторами изображений
         vectors = self.vectorize_all(model, n_dims=4096)

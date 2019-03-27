@@ -8,8 +8,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-    ports:
-      - "5432:5432"
+#    ports:
+#      - "5434:5434"
 #  redis:
 #    image: redis:2.8.23
 #    ports:
