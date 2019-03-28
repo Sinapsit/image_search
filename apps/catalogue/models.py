@@ -67,7 +67,8 @@ class ProductImage(ProjectBaseMixin):
     def image_tag(self):
         """Admin preview tag."""
         if self.image:
-            return mark_safe('<img src="%s" width="150" height="150"/>' % self.get_image_url())
+            return mark_safe(
+                f'<a href={ self.get_image_url() }><img src="{ self.get_image_url() }" width="150" height="150"/></a>')
         else:
             return None
 
