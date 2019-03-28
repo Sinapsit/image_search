@@ -16,7 +16,7 @@
     <div class="row mb-2">
     {% for img in images %}
 
-        <article class="media content-section col-md-6">
+        <div class="col-md-6">
             <div class="card flex-md-row mb-4 shadow-sm">
                 <img class="img-thumbnail rounded card-img-left" src="{{ img.image }}" width="150" height="150">
                 <div class="card-body d-flex flex-column align-items-start">
@@ -33,7 +33,7 @@
                     </p>
                 </div>
             </div>
-        </article>
+        </div>
         {% if forloop.counter|divisibleby:"2" %}
             </div><div class="row mb-2">
         {% endif %}
