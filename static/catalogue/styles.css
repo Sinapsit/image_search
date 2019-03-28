@@ -36,15 +36,6 @@ ul {
   margin-bottom: 20px;
 }
 
-.article-title {
-  color: #444444;
-}
-
-a.article-title:hover {
-  color: #428bca;
-  text-decoration: none;
-}
-
 .article-content {
   white-space: pre-line;
 }
