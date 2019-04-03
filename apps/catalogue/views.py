@@ -25,10 +25,11 @@ class PhotoUploadView(CreateView):
         save_path = os.path.join(settings.MEDIA_ROOT, 'uploads', image._name)
         path = default_storage.save(save_path, image)
         pred = Predict(path=path, list_content='article').similarity()
-        list_data = [i[0] for i in pred]
-        qs = self.queryset.filter(article__in=list_data)
-        images = serializers.ImageSerializer(qs, many=True).data
-        return render(self.request, 'catalogue/results.html', {'images': images,
+        print(pred)
+        list_data = [i[0] for i in pred if i[1] < settings.SEARCH_ACCURACY]
+        qs = self.queryset.filter(article__in=list_data).annotate_vector_dist(pred).order_by('vector_dist')
+        # images = serializers.ImageSerializer(qs, many=True).data
+        return render(self.request, 'catalogue/results.html', {'images': qs,
                                                                'search_img': path.split('/')[-1]})
 
 
@@ -62,6 +63,6 @@ class ImageSearchView(generics.GenericAPIView):
         # path = 'media/media/image/productimage/03-24-2019/000205.jpeg'
         pred = Predict(path=path, list_content='article').similarity()
         list_data = [i[0] for i in pred]
-        qs = self.queryset.filter(article__in=list_data)
+        qs = self.queryset.annotate_vector_dist(pred).filter(article__in=list_data)
         images = serializers.ImageSerializer(qs, many=True).data
         return Response(data=images, status=status.HTTP_200_OK)

@@ -25,6 +25,18 @@ class ProductImageQuerySet(models.QuerySet):
     def available(self):
         return self.filter(status=ProductImage.LOADED)
 
+    def annotate_vector_dist(self, img_list):
+        whens = [
+            models.When(article=k, then=v) for k, v in img_list
+        ]
+        return self.annotate(
+            vector_dist=models.Case(
+                *whens,
+                default=0,
+                output_field=models.FloatField()
+            )
+        )
+
 
 class ProductImage(ProjectBaseMixin):
     """Product image model."""

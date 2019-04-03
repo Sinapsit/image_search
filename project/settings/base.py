@@ -181,3 +181,4 @@ REST_FRAMEWORK = {
 # Machine learning
 VECTORS_PATH = 'datadir/vectors/image_vectors.npz'
 WEIGHTS = 'datadir/vgg19_weights_tf_dim_ordering_tf_kernels.h5'
+SEARCH_ACCURACY = 0.6

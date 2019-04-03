@@ -8,7 +8,7 @@
 
     <strong class="d-inline-block text-dark">Search image</strong>
     <div class="row mb-2">
-        <img class="img-thumbnail rounded card-img-left flex-auto d-none d-lg-block" src="/media/uploads/{{ search_img }}" width="150" height="150">
+        <img class="img-thumbnail rounded card-img-left flex-auto d-none d-lg-block" src="/media/uploads/{{ search_img }}" onclick="window.open('/media/uploads/{{ search_img }}')">
 
     </div>
     <hr>
@@ -16,13 +16,15 @@
     <div class="row mb-2">
     {% for img in images %}
         <div class="col-md-6">
-            <div class="card flex-md-row mb-4 shadow-sm h-md-250">
+            <div class="card flex-md-row mb-4 shadow-sm h-md-250" >
 
-                <img class="img-thumbnail rounded card-img-left flex-auto d-none d-lg-block" src="{{ img.image }}" width="150" height="150">
+
+                <img class="img-thumbnail rounded card-img-left flex-auto d-none d-lg-block" src="{{ img.image.url }}" width="150" onclick="window.open('{{ img.image.url }}')" >
 
                 <div class="card-body d-flex flex-column align-items-start">
                     <h3 class="mb-0 text-dark">Characteristics</h3>
                     <p class="card-text mb-auto"><strong class="d-inline-block mb-2 text-dark"> Article:</strong> {{ img.article }}</p>
+                    <p class="card-text mb-auto"><strong class="d-inline-block mb-2 text-dark"> Vector:</strong> <code>{{ img.vector_dist }}</code></p>
                     <p class="card-text mb-auto">
                         <strong class="d-inline-block mb-2 text-dark"> Text: </strong>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod

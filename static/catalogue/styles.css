@@ -43,4 +43,5 @@ ul {
     border-radius: .25rem;
     max-width: 100%;
     height: 150px;
+    cursor: pointer;
 }

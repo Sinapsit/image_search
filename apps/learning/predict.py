@@ -10,9 +10,11 @@ from sklearn.neighbors import NearestNeighbors
 
 from configuration.models import LearningConfig
 from learning.common import BaseLearning
-import tensorflow as tf
+
 from keras.applications import VGG19
 import time
+
+from keras import backend as K
 
 
 class Predict(BaseLearning):
@@ -30,6 +32,7 @@ class Predict(BaseLearning):
         return f"w_tm: {time.clock() - self.start_time}"
 
     def _vectorize(self, model):
+
         img = image.load_img(self.path or self.file, target_size=(224, 224))
         print(f'Open img file!: {self.get_timing()}')
         x = image.img_to_array(img)
@@ -40,6 +43,7 @@ class Predict(BaseLearning):
         print(f'preprocess_input!: {self.get_timing()}')
         pred = model.predict(x)  # w_tm: 20.432673
         print(f'predict!: {self.get_timing()}')
+        K.clear_session()
         return pred.ravel()
 
     def _similar(self, vec, knn, list_data, n_neighbors=6):
@@ -51,11 +55,11 @@ class Predict(BaseLearning):
     def similarity(self, n_neighbors=6):
         base_model = VGG19(weights=self.get_weights())  # w_tm: 5.669065000000001
         print(f'Base model loaded: {self.get_timing()}')
-        # with graph.as_default():
         vecs = self.load_sparse_matrix()  # w_tm: 11.862487999999999
 
         # Read about fc1 here http://cs231n.github.io/convolutional-networks/
         model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc1').output)
+        model._make_predict_function()
         print(f'model without layers loaded: {self.get_timing()}')  # w_tm: 11.863167999999998
         knn = NearestNeighbors(metric='cosine', algorithm='brute')
         knn.fit(vecs)
@@ -67,6 +71,7 @@ class Predict(BaseLearning):
         print(f'Got list data: {self.get_timing()}')
         vec = self._vectorize(model)
         print(f'Vector search img got: {self.get_timing()}')  # w_tm: 20.432828
+
         return self._similar(vec, knn, list_data, n_neighbors)
 
     def load_sparse_matrix(self):
