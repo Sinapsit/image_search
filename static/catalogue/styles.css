@@ -35,3 +35,10 @@ ul {
   border-radius: 3px;
   margin-bottom: 20px;
 }
+
+.description {
+  margin: 5px 20px 5px 20px;
+}
+.description p{
+  margin-bottom: 0px;
+}

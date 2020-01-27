@@ -11,7 +11,8 @@ class ImageSerializer(serializers.ModelSerializer):
             "id",
             "article",
             "external_url",
-            "image"
+            "image",
+            "category",
         ]
 
 

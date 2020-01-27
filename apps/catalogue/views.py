@@ -28,7 +28,7 @@ class PhotoUploadView(CreateView):
         list_data = [i[0] for i in pred]
         qs = self.queryset.filter(article__in=list_data)
         images = serializers.ImageSerializer(qs, many=True).data
-        return render(self.request, 'catalogue/results.html', {'images': images,
+        return render(self.request, 'catalogue/results.html', {'images': qs,
                                                                'search_img': path.split('/')[-1]})
 
 

@@ -3,15 +3,15 @@
 import numpy as np
 import scipy.sparse as sp
 from django.conf import settings
-from keras.applications.vgg19 import preprocess_input
-from keras.engine import Model
-from keras.preprocessing import image
+from tensorflow.python.keras.applications.vgg19 import preprocess_input
+from tensorflow.python.keras import Model
+from tensorflow.python.keras.preprocessing import image
 from sklearn.neighbors import NearestNeighbors
 
 from configuration.models import LearningConfig
 from learning.common import BaseLearning
 import tensorflow as tf
-from keras.applications import VGG19
+from tensorflow.python.keras.applications.vgg19 import VGG19
 import time
 
 

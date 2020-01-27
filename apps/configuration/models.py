@@ -14,3 +14,13 @@ class LearningConfig(SingletonModel):
     article_list = ArrayField(models.CharField(max_length=512),
                               verbose_name=_('Article list'),
                               null=True, default=None)
+
+
+class LearningConfigHDF5(SingletonModel):
+    file = models.FileField(_('File'), upload_to=vector_path)
+    filename_list = ArrayField(models.CharField(max_length=512),
+                               verbose_name=_('Filename list'),
+                               null=True, default=None)
+    article_list = ArrayField(models.CharField(max_length=512),
+                              verbose_name=_('Article list'),
+                              null=True, default=None)

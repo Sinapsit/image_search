@@ -1,15 +1,15 @@
 import numpy as np
 import scipy.sparse as sp
 from django.conf import settings
+from keras.applications import VGG19
 from keras.applications.vgg19 import preprocess_input
 from keras.engine import Model
 from keras.preprocessing import image
 
 from catalogue.models import ProductImage
-from configuration.models import LearningConfig
+from configuration.models import LearningConfigHDF5
 from learning.common import BaseLearning
-import tensorflow as tf
-from keras.applications import VGG19
+import h5py
 
 
 class Vectorization(BaseLearning):
@@ -94,10 +94,11 @@ class Vectorization(BaseLearning):
         np.savez(self.vectors_filename, row=row, col=col, data=data, shape=shape)
 
         # save list of filename
-        ml_conf = LearningConfig.get_solo()
+        ml_conf = LearningConfigHDF5.get_solo()
         ml_conf.filename_list = list(self.files)
         ml_conf.article_list = list(self.articles)
-        with open(self.vectors_filename, 'rb') as npz_file:
-            ml_conf.file.save(name='image_vectors.npz', content=npz_file, save=False)
+
+        with h5py.File(self.vectors_filename, 'r+') as hdf5_file:
+            ml_conf.file.save(name='image_vectors.hdf5', content=hdf5_file, save=False)
 
         ml_conf.save()

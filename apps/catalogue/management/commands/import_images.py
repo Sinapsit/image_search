@@ -5,7 +5,8 @@ import sys
 import pandas as pd
 from django.core.management.base import BaseCommand
 
-from catalogue.models import ProductImage
+from catalogue.models import ProductImage, Category
+from tqdm import tqdm
 
 
 class Command(BaseCommand):
@@ -33,7 +34,11 @@ class Command(BaseCommand):
 
         csv = options['path']
         df = pd.read_csv(csv)
-        df.columns = ['article', 'external_url']
+        df.columns = ['im_name', 'im_url', 'category']
         ProductImage.objects.bulk_create(
-            ProductImage(**vals) for vals in df.to_dict('records')
+            ProductImage(
+                category=Category.objects.get_or_create(name=vals['category'])[0],
+                article=vals['im_name'],
+                external_url=vals['im_url']
+            ) for vals in tqdm(df.to_dict('records'), desc='Export image data.')
         )

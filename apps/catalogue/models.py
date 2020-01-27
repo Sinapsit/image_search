@@ -4,6 +4,19 @@ from django.utils.translation import ugettext_lazy as _
 
 from utils.models import ProjectBaseMixin, image_path
 from utils.tools import GetRemoteImage
+from tqdm import tqdm
+
+
+class Category(models.Model):
+    """Product category model."""
+    name = models.CharField(_("name"), max_length=255)
+
+    class Meta:
+        verbose_name = _('category')
+        verbose_name_plural = _('categories')
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class ProductImageManager(models.Manager):
@@ -11,7 +24,7 @@ class ProductImageManager(models.Manager):
 
     def load_images(self):
         qs = self.filter(status=ProductImage.NOT_LOADED)
-        for obj in qs:
+        for obj in tqdm(qs):
             obj.load_image()
         return qs
 
@@ -43,6 +56,10 @@ class ProductImage(ProjectBaseMixin):
     external_url = models.URLField(_('External URL'), null=True, default=None)
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=NOT_LOADED)
     is_vectorized = models.BooleanField(_('Is vectorized'), default=False)
+    category = models.ForeignKey(
+        Category, verbose_name='category', null=True,
+        default=None, on_delete=models.CASCADE)
+
     objects = ProductImageManager.from_queryset(ProductImageQuerySet)()
 
     class Meta:
@@ -68,7 +85,9 @@ class ProductImage(ProjectBaseMixin):
         """Admin preview tag."""
         if self.image:
             return mark_safe(
-                f'<a href={ self.get_image_url() }><img src="{ self.get_image_url() }" width="150" height="150"/></a>')
+                f'<a href={ self.get_image_url() }>'
+                f'<img src="{self.get_image_url() }" width="150" height="150"/>'
+                f'</a>')
         else:
             return None
 

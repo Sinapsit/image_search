@@ -5,7 +5,6 @@ import os
 from django.core.files import File
 
 
-
 class GetRemoteImage:
 
     def __init__(self, obj):

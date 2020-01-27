@@ -43,6 +43,15 @@ def vector_path(instance, filename):
         filename)
 
 
+def vector_hdf5_path(instance, filename):
+    """Determine vector file path method."""
+    filename = '%s.hdf5' % generate_code()
+    return 'vector/%s/%s/%s' % (
+        instance._meta.model_name,
+        datetime.now().strftime(settings.REST_DATE_FORMAT),
+        filename)
+
+
 class ImageMixin(models.Model):
     """Avatar model."""
 

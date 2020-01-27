@@ -15,8 +15,12 @@
     {% for img in images %}
 
         <article class="media content-section">
-            <img class="img-thumbnail rounded float-left" src="{{ img.image }}" width="150" height="150">
-            <small> Article:{{ img.article }}</small>
+            <img class="img-thumbnail rounded float-left" src="{{ img.image.url }}" width="150" height="150">
+            <div class="description">
+                <h4>Описание</h4>
+                <p><small> Article: <code>{{ img.article }}</code> </small></p>
+                <p><small> Category: {{ img.category.name }}</small></p>
+            </div>
         </article>
 
     {% endfor %}
