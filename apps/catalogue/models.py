@@ -38,12 +38,25 @@ class ProductImageQuerySet(models.QuerySet):
     def available(self):
         return self.filter(status=ProductImage.LOADED)
 
+    def annotate_vector_dist(self, img_list):
+        whens = [
+            models.When(article=k, then=v) for k, v in img_list
+        ]
+        return self.annotate(
+            vector_dist=models.Case(
+                *whens,
+                default=0,
+                output_field=models.FloatField()
+            )
+        )
+
 
 class ProductImage(ProjectBaseMixin):
     """Product image model."""
     NOT_LOADED = 0
     LOADED = 1
     NOT_FOUND = 3
+    BAD_FORMAT = 4
 
     STATUS_CHOICES = (
         (NOT_LOADED, _("Not loaded")),
@@ -59,6 +72,8 @@ class ProductImage(ProjectBaseMixin):
     category = models.ForeignKey(
         Category, verbose_name='category', null=True,
         default=None, on_delete=models.CASCADE)
+
+    error = models.TextField(blank=True, null=True, default=None)
 
     objects = ProductImageManager.from_queryset(ProductImageQuerySet)()
 

@@ -26,7 +26,15 @@ class PhotoUploadView(CreateView):
         path = default_storage.save(save_path, image)
         pred = Predict(path=path, list_content='article').similarity()
         list_data = [i[0] for i in pred]
-        qs = self.queryset.filter(article__in=list_data)
+        print("_______________________", pred)
+        category = None
+
+        if list_data:
+            category = models.Category.objects.filter(productimage__article=list_data[0]).first()
+        qs = self.queryset.filter(
+            article__in=list_data,
+            # category=category
+        ).annotate_vector_dist(pred).order_by('vector_dist')
         images = serializers.ImageSerializer(qs, many=True).data
         return render(self.request, 'catalogue/results.html', {'images': qs,
                                                                'search_img': path.split('/')[-1]})

@@ -1,18 +1,25 @@
 # -*- coding: utf-8 -*-
 
+import time
+
 import numpy as np
-import scipy.sparse as sp
-from django.conf import settings
-from tensorflow.python.keras.applications.vgg19 import preprocess_input
+from nearpy import Engine
+from nearpy.hashes import RandomBinaryProjections
+from nearpy.storage import RedisStorage
+from nearpy.filters import DistanceThresholdFilter, NearestFilter, UniqueFilter
+from redis import Redis
 from tensorflow.python.keras import Model
+from tensorflow.python.keras.applications.vgg19 import VGG19
+from tensorflow.python.keras.applications.vgg19 import preprocess_input
 from tensorflow.python.keras.preprocessing import image
-from sklearn.neighbors import NearestNeighbors
 
 from configuration.models import LearningConfig
 from learning.common import BaseLearning
-import tensorflow as tf
-from tensorflow.python.keras.applications.vgg19 import VGG19
-import time
+
+# Create redis storage adapter
+redis_object = Redis(host='redis', port=6379, db=0)
+redis_storage = RedisStorage(redis_object)
+config = redis_storage.load_hash_configuration('Stolplit')
 
 
 class Predict(BaseLearning):
@@ -52,26 +59,40 @@ class Predict(BaseLearning):
         base_model = VGG19(weights=self.get_weights())  # w_tm: 5.669065000000001
         print(f'Base model loaded: {self.get_timing()}')
         # with graph.as_default():
-        vecs = self.load_sparse_matrix()  # w_tm: 11.862487999999999
+        # vecs = self.load_sparse_matrix()  # w_tm: 11.862487999999999
 
         # Read about fc1 here http://cs231n.github.io/convolutional-networks/
         model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc1').output)
         print(f'model without layers loaded: {self.get_timing()}')  # w_tm: 11.863167999999998
-        knn = NearestNeighbors(metric='cosine', algorithm='brute')
-        knn.fit(vecs)
+        # knn = NearestNeighbors(metric='cosine', algorithm='brute')
+        # knn.fit(vecs)
         print(f'Training without control: {self.get_timing()}')
-        list_data = self.config.filename_list
+        # list_data = self.config.filename_list
 
-        if self.list_content == 'article':
-            list_data = self.config.article_list
+        # if self.list_content == 'article':
+        #     list_data = self.config.article_list
         print(f'Got list data: {self.get_timing()}')
         vec = self._vectorize(model)
         print(f'Vector search img got: {self.get_timing()}')  # w_tm: 20.432828
-        return self._similar(vec, knn, list_data, n_neighbors)
+        # return self._similar(vec, knn, list_data, n_neighbors)
 
-    def load_sparse_matrix(self):
-        y = np.load(settings.VECTORS_PATH)  # w_tm: 5.493172
-        print(f'load_sparse_matrix: {self.get_timing()}')
-        z = sp.coo_matrix((y['data'], (y['row'], y['col'])), shape=y['shape'])  # w_tm: 11.912833
-        print(f'coo_matrix: {self.get_timing()}')
-        return z
+        if config is None:
+            # Config is not existing, create hash from scratch, with 10 projections
+            lshash = RandomBinaryProjections('Stolplit', 10)
+        else:
+            # Config is existing, create hash with None parameters
+            lshash = RandomBinaryProjections(None, None)
+            # Apply configuration loaded from redis
+        lshash.apply_config(config)
+
+        engine = Engine(
+            4096,
+            lshashes=[lshash],
+            storage=redis_storage,
+            vector_filters=[
+                # DistanceThresholdFilter(0.4),
+                NearestFilter(10),
+                UniqueFilter()
+            ]
+        )
+        return [[article, distance] for a, article, distance in engine.neighbours(vec)]

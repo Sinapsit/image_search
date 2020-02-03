@@ -20,6 +20,7 @@
                 <h4>Описание</h4>
                 <p><small> Article: <code>{{ img.article }}</code> </small></p>
                 <p><small> Category: {{ img.category.name }}</small></p>
+                <p><small> Score: {{ img.vector_dist|floatformat:-2 }}</small></p>
             </div>
         </article>
 
