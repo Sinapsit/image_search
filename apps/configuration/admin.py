@@ -11,3 +11,9 @@ class LearningConfigAdmin(SingletonModelAdmin):
 @admin.register(models.LearningConfigHDF5)
 class LearningConfigHDF5Admin(SingletonModelAdmin):
     """Learning HDF5 config."""
+
+
+@admin.register(models.SuperIndex)
+class SuperIndexAdmin(admin.ModelAdmin):
+    """Super index admin."""
+    list_display = ('id', 'super_category', 'created', 'modified', )

@@ -7,8 +7,12 @@
 {% block content %}
     <strong>Search image</strong>
     <article class="media content-section">
-        <img class="img-thumbnail rounded float-left" src="/media/uploads/{{ search_img }}" width="150" height="150">
+        <img class="img-thumbnail rounded float-left" src="{{ search_instance.image.url }}" width="150" height="150">
         {{ img.article }}
+        <div class="description">
+            <h4>Прогноз:</h4>
+            <p><small> Category: {{ category }}</small></p>
+            </div>
     </article>
     <hr>
     <strong>Result:</strong>

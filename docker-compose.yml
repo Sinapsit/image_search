@@ -1,4 +1,4 @@
-version: '3'
+version: '2.3'
 services:
   # PostgreSQL database
   db:
@@ -24,6 +24,7 @@ services:
       - DB_HOSTNAME=db
       - DB_PORT=5432
       - DB_PASSWORD=postgres
+
     volumes:
       - .:/code
     links:
@@ -31,7 +32,7 @@ services:
       - redis
   img_search:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: /bin/bash -c "./manage.py runserver 0.0.0.0:8000"
     environment:
       - SETTINGS_CONFIGURATION=local
       - DB_NAME=postgres
@@ -39,11 +40,16 @@ services:
       - DB_HOSTNAME=db
       - DB_PORT=5432
       - DB_PASSWORD=postgres
+      - CUDA_VISIBLE_DEVICES=2
+      - TF_CPP_MIN_LOG_LEVEL=2
     depends_on:
       - db
-      - redis
-      - worker
+#      - redis
+#      - worker
     volumes:
       - .:/code
     ports:
       - "8000:8000"
+
+    runtime: nvidia
+#   image: nvidia/cuda:10.2-base-ubuntu18.04

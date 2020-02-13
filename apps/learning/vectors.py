@@ -5,7 +5,7 @@ from nearpy import Engine
 
 
 # Create redis storage adapter
-redis_object = Redis(host='localhost', port=6379, db=0)
+redis_object = Redis(host='localhost', port=6379, db=0, retry_on_timeout=True)
 redis_storage = RedisStorage(redis_object)
 
 # Get hash config from redis

@@ -6,6 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from easy_thumbnails.fields import ThumbnailerImageField
+from django.utils.html import mark_safe
 
 
 class ProjectBaseMixin(models.Model):
@@ -27,7 +28,7 @@ def generate_code():
 
 def image_path(instance, filename):
     """Determine avatar path method."""
-    filename = '%s.jpeg' % generate_code()
+    filename = f'{generate_code()}_{filename }'
     return 'image/%s/%s/%s' % (
         instance._meta.model_name,
         datetime.now().strftime(settings.REST_DATE_FORMAT),
@@ -77,7 +78,8 @@ class ImageMixin(models.Model):
     def image_tag(self):
         """Admin preview tag."""
         if self.image:
-            return mark_safe('<img src="%s" />' % self.get_image_url())
+            link = self.get_image_url('tiny')
+            return mark_safe(f'<a href="{link}"><img src="{link}" /></a>')
         else:
             return None
 

@@ -1,15 +1,36 @@
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import ugettext_lazy as _
-
-from utils.models import ProjectBaseMixin, image_path
-from utils.tools import GetRemoteImage
 from tqdm import tqdm
+
+from utils.models import ProjectBaseMixin, image_path, ImageMixin
+from utils.tools import GetRemoteImage
 
 
 class Category(models.Model):
     """Product category model."""
+    COMPUTER_CHAIR = 'computer_chair'
+    ARMCHAIR_OTTOMAN = 'armchair_ottoman'
+    SOFA_BED_CHAIR = 'sofa_bed_chair'
+    TABLE = 'table'
+    CHAIR = 'chair'  # chair, hard armchair
+    CABINET = 'cabinet'  # bedside tables, chest of drawers, cupboard, cabinets
+    OTHER = 'other'
+
+    SUPER_CATEGORY_CHOICES = (
+        (COMPUTER_CHAIR, _('computer chair')),
+        (ARMCHAIR_OTTOMAN, _('armchair ottoman')),
+        (SOFA_BED_CHAIR, _('sofa bed chair')),
+        (TABLE, _('table')),
+        (CHAIR, _('chair')),
+        (CABINET, _('cabinet')),
+        (OTHER, _('other'))
+    )
+
     name = models.CharField(_("name"), max_length=255)
+    super_category = models.CharField(
+        _("super category"), choices=SUPER_CATEGORY_CHOICES, max_length=255,
+        default=OTHER)
 
     class Meta:
         verbose_name = _('category')
@@ -51,7 +72,7 @@ class ProductImageQuerySet(models.QuerySet):
         )
 
 
-class ProductImage(ProjectBaseMixin):
+class ProductImage(ProjectBaseMixin, ImageMixin):
     """Product image model."""
     NOT_LOADED = 0
     LOADED = 1
@@ -61,11 +82,12 @@ class ProductImage(ProjectBaseMixin):
     STATUS_CHOICES = (
         (NOT_LOADED, _("Not loaded")),
         (LOADED, _('Loaded')),
-        (NOT_FOUND, _('Not found'))
+        (NOT_FOUND, _('Not found')),
+        (BAD_FORMAT, _('Bad format')),
+
     )
 
     article = models.CharField(verbose_name=_('Article'), max_length=512, unique=True)
-    image = models.ImageField(verbose_name=_('Image'), upload_to=image_path)
     external_url = models.URLField(_('External URL'), null=True, default=None)
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=NOT_LOADED)
     is_vectorized = models.BooleanField(_('Is vectorized'), default=False)
@@ -88,26 +110,5 @@ class ProductImage(ProjectBaseMixin):
     def make_vector(self):
         pass
 
-    def get_image(self, key=None):
-        """Get image file."""
-        return self.image if self.image else None
-
-    def get_image_url(self, key=None):
-        """Get image thumbnail url."""
-        return self.get_image(key).url if self.image else None
-
-    def image_tag(self):
-        """Admin preview tag."""
-        if self.image:
-            return mark_safe(
-                f'<a href={ self.get_image_url() }>'
-                f'<img src="{self.get_image_url() }" width="150" height="150"/>'
-                f'</a>')
-        else:
-            return None
-
     def load_image(self):
         GetRemoteImage(self).load()
-
-    image_tag.short_description = _('Image')
-    image_tag.allow_tags = True

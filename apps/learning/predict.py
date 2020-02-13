@@ -14,15 +14,16 @@ from tensorflow.python.keras.applications.vgg19 import preprocess_input
 from tensorflow.python.keras.preprocessing import image
 
 from configuration.models import LearningConfig
-from learning.common import BaseLearning
+from learning.common import get_weights
+from catalogue.models import Category
 
 # Create redis storage adapter
-redis_object = Redis(host='redis', port=6379, db=0)
+redis_object = Redis(host='redis', port=6379, db=0, retry_on_timeout=True)
 redis_storage = RedisStorage(redis_object)
-config = redis_storage.load_hash_configuration('Stolplit')
+base_model = VGG19(weights=get_weights())
 
 
-class Predict(BaseLearning):
+class Predict:
 
     def __init__(self, path=None, file=None, list_content='filename'):
         super().__init__()
@@ -56,7 +57,7 @@ class Predict(BaseLearning):
         return [(list_data[indices[i]], dist[i]) for i in range(len(indices))]
 
     def similarity(self, n_neighbors=6):
-        base_model = VGG19(weights=self.get_weights())  # w_tm: 5.669065000000001
+         # w_tm: 5.669065000000001
         print(f'Base model loaded: {self.get_timing()}')
         # with graph.as_default():
         # vecs = self.load_sparse_matrix()  # w_tm: 11.862487999999999
@@ -76,13 +77,16 @@ class Predict(BaseLearning):
         print(f'Vector search img got: {self.get_timing()}')  # w_tm: 20.432828
         # return self._similar(vec, knn, list_data, n_neighbors)
 
+        # category = self.get_category()
+        config = redis_storage.load_hash_configuration(Category.COMPUTER_CHAIR)
         if config is None:
             # Config is not existing, create hash from scratch, with 10 projections
-            lshash = RandomBinaryProjections('Stolplit', 10)
+            lshash = RandomBinaryProjections(Category.COMPUTER_CHAIR, 10)
         else:
             # Config is existing, create hash with None parameters
             lshash = RandomBinaryProjections(None, None)
             # Apply configuration loaded from redis
+
         lshash.apply_config(config)
 
         engine = Engine(
@@ -90,9 +94,9 @@ class Predict(BaseLearning):
             lshashes=[lshash],
             storage=redis_storage,
             vector_filters=[
-                # DistanceThresholdFilter(0.4),
+                # DistanceThresholdFilter(10),
                 NearestFilter(10),
-                UniqueFilter()
+                # UniqueFilter()
             ]
         )
         return [[article, distance] for a, article, distance in engine.neighbours(vec)]

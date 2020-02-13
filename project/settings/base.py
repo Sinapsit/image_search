@@ -52,6 +52,7 @@ CONTRIB_APPS = [
 PROJECT_APPS = [
     'catalogue.apps.CatalogueConfig',
     'configuration.apps.ConfigurationConfig',
+    'activity.apps.ActivityConfig',
 ]
 
 EXTERNAL_APPS = [
@@ -131,9 +132,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -179,5 +180,29 @@ REST_FRAMEWORK = {
 }
 
 # Machine learning
-VECTORS_PATH = 'datadir/vectors/image_vectors.npz'
-WEIGHTS = 'datadir/vgg19_weights_tf_dim_ordering_tf_kernels.h5'
+VECTORS_DIR = os.path.join(MEDIA_ROOT, 'vectors')
+
+WEIGHTS = os.path.join(DATADIR_ROOT, 'vgg19_weights_tf_dim_ordering_tf_kernels.h5')
+
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://redis:6379/1'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/1'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+USE_CELERY = False
+
+# Thumbnail settings
+THUMBNAIL_ALIASES = {
+    '': {
+        'tiny': {'size': (100, 0), },
+        'small': {'size': (480, 0), },
+        'middle': {'size': (700, 0), },
+        'large': {'size': (1500, 0), },
+        'default': {'size': (300, 200), 'crop': True},
+        'gallery': {'size': (240, 160), 'crop': True},
+        'ml': {'size': (224, 224), },
+    },
+}

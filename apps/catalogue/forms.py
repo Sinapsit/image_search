@@ -1,8 +1,8 @@
 from django import forms
-from .models import ProductImage
+from activity.models import SearchRequest
 
 
-class PhotoUploadForm(forms.ModelForm):
+class SearchRequestForm(forms.ModelForm):
     class Meta:
-        model = ProductImage
+        model = SearchRequest
         fields = ['image']
