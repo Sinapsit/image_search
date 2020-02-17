@@ -2,9 +2,10 @@ import os
 
 import numpy as np
 from django.conf import settings
-
+import scipy.sparse as sp
 from catalogue.models import Category
 from configuration.models import SuperIndex
+from sklearn.neighbors import NearestNeighbors
 
 
 def get_weights():
@@ -14,7 +15,7 @@ def get_weights():
     return weights
 
 
-def get_vectors(label_map):
+def get_fitted_data(label_map):
     """
     This method preparing a commutation map.
     :param label_map: as {
@@ -31,5 +32,9 @@ def get_vectors(label_map):
         # Checking index for existing.
         if index:
             path = index.vectors.path
-            vectors[index_ml] = (value[1], np.load(path), index.article_list)
+            y = np.load(path)
+            v = sp.coo_matrix((y['data'], (y['row'], y['col'])), shape=y['shape'])
+            knn = NearestNeighbors(metric='cosine', algorithm='brute')
+            knn.fit(v)
+            vectors[index_ml] = (value[1], knn, index.article_list)
     return vectors

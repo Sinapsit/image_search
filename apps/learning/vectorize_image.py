@@ -51,7 +51,7 @@ class Vectorization:
             self.files.append(product.image["ml"].path)
             self.articles.append(product.article)
 
-    def vectorize_all(self, px=224, n_dims=512, batch_size=512):
+    def vectorize_all(self, px=224, n_dims=512, batch_size=50):
         logger.info("Will vectorize")
         min_idx = 0
         max_idx = min_idx + batch_size
@@ -122,5 +122,5 @@ class Vectorization:
                 "article_list": list(self.articles)
             }
         )
-        ml_conf.vectors.name = self.vectors_filename.replace(settings.MEDIA_ROOT, '')
+        ml_conf.vectors.name = self.vectors_filename.replace(settings.MEDIA_ROOT+'/', '')
         ml_conf.save()

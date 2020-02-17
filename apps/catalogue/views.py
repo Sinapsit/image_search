@@ -20,7 +20,6 @@ class PhotoUploadView(CreateView):
     form_class = SearchRequestForm
     template_name = 'catalogue/base.html'
     success_url = '/catalogue/results/'
-    queryset = models.ProductImage.objects.all()
 
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
@@ -29,12 +28,9 @@ class PhotoUploadView(CreateView):
         pred = OldPredict(search_instance=instance)
         similar = pred.similarity()
         category = pred.category
-        list_data = [i[0] for i in similar]
-        qs = self.queryset.filter(
-            article__in=list_data,
-        ).annotate_vector_dist(similar).order_by('vector_dist')
+        search_products = instance.save_result(similar)
         return render(self.request, 'catalogue/results.html', {
-            'images': qs,
+            'search_products': search_products,
             'category': category,
             'search_instance': instance
         })

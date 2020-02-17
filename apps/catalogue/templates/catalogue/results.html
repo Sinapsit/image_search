@@ -8,7 +8,6 @@
     <strong>Search image</strong>
     <article class="media content-section">
         <img class="img-thumbnail rounded float-left" src="{{ search_instance.image.url }}" width="150" height="150">
-        {{ img.article }}
         <div class="description">
             <h4>Прогноз:</h4>
             <p><small> Category: {{ category }}</small></p>
@@ -16,15 +15,15 @@
     </article>
     <hr>
     <strong>Result:</strong>
-    {% for img in images %}
+    {% for search_product in search_products %}
 
         <article class="media content-section">
-            <img class="img-thumbnail rounded float-left" src="{{ img.image.url }}" width="150" height="150">
+            <img class="img-thumbnail rounded float-left" src="{{ search_product.product.image.url }}" width="150" height="150">
             <div class="description">
                 <h4>Описание</h4>
-                <p><small> Article: <code>{{ img.article }}</code> </small></p>
-                <p><small> Category: {{ img.category.name }}</small></p>
-                <p><small> Score: {{ img.vector_dist|floatformat:-2 }}</small></p>
+                <p><small> Article: <code>{{ search_product.product.article }}</code> </small></p>
+                <p><small> Category: {{ search_product.product.category.name }}</small></p>
+                <p><small> Score: {{ search_product.score|floatformat:-2 }}</small></p>
             </div>
         </article>
 
